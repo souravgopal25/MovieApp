@@ -9,7 +9,7 @@
 
     tools:context=".MainActivity">
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <LinearLayout
@@ -17,24 +17,31 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <androidx.appcompat.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/page"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"/>
         <Spinner
             android:id="@+id/category"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"/>
+        <Button
+            android:layout_marginLeft="10dp"
+            android:text="SEARCH"
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
 
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
     </LinearLayout>
 
 </ScrollView>
