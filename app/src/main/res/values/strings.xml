@@ -4,5 +4,5 @@
     <string name="userRating">User Rating</string>
     <string name="ReleaseDate">Release Date</string>
     <string name="title">Title</string>
-    <string name="apikey">Enteryour apikey</string>
+    <string name="apikey">ENTERYOURAPI</string>
 </resources>

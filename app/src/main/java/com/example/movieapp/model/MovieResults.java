@@ -1,5 +1,8 @@
 package com.example.movieapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class MovieResults {
@@ -48,7 +51,8 @@ public class MovieResults {
         this.results = results;
     }
 
-    public static class ResultsBean {
+    public static class ResultsBean implements Parcelable {
+
         /**
          * popularity : 280.415
          * vote_count : 1850
@@ -80,6 +84,34 @@ public class MovieResults {
         private String overview;
         private String release_date;
         private List<Integer> genre_ids;
+
+        protected ResultsBean(Parcel in) {
+            popularity = in.readDouble();
+            vote_count = in.readInt();
+            video = in.readByte() != 0;
+            poster_path = in.readString();
+            id = in.readInt();
+            adult = in.readByte() != 0;
+            backdrop_path = in.readString();
+            original_language = in.readString();
+            original_title = in.readString();
+            title = in.readString();
+            vote_average = in.readFloat();
+            overview = in.readString();
+            release_date = in.readString();
+        }
+
+        public static final Creator<ResultsBean> CREATOR = new Creator<ResultsBean>() {
+            @Override
+            public ResultsBean createFromParcel(Parcel in) {
+                return new ResultsBean(in);
+            }
+
+            @Override
+            public ResultsBean[] newArray(int size) {
+                return new ResultsBean[size];
+            }
+        };
 
         public double getPopularity() {
             return popularity;
@@ -191,6 +223,28 @@ public class MovieResults {
 
         public void setGenre_ids(List<Integer> genre_ids) {
             this.genre_ids = genre_ids;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeDouble(popularity);
+            parcel.writeInt(vote_count);
+            parcel.writeByte((byte) (video ? 1 : 0));
+            parcel.writeString(poster_path);
+            parcel.writeInt(id);
+            parcel.writeByte((byte) (adult ? 1 : 0));
+            parcel.writeString(backdrop_path);
+            parcel.writeString(original_language);
+            parcel.writeString(original_title);
+            parcel.writeString(title);
+            parcel.writeFloat(vote_average);
+            parcel.writeString(overview);
+            parcel.writeString(release_date);
         }
     }
 }

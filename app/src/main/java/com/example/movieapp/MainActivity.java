@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.movieapp.adapter.MovieAdapter;
 import com.example.movieapp.model.MovieResults;
 import com.example.movieapp.networking.ApiInterface;
+import com.example.movieapp.utils.NetworkCheck;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,12 +65,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         populateDropdown();
-        retrofit();
+       retrofit();
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, CATEGORY+" !!!"+PAGE, Toast.LENGTH_SHORT).show();
+                /*Toast.makeText(MainActivity.this, CATEGORY+" !!!"+PAGE, Toast.LENGTH_SHORT).show();*/
                 listofMovies1.clear();
                 movieAdapter.notifyDataSetChanged();
                 retrofit();
@@ -87,17 +89,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         switch (adapterView.getId()){
-            case R.id.category:CATEGORY=category[i];
-/*
-           Toast.makeText(this, category[i], Toast.LENGTH_SHORT).show();
-                                //TODO*/
+            case R.id.category:
+                                CATEGORY=category[i];
                                 break;
 
             case R.id.page:
-                PAGE=pages[i];
-               /*Toast.makeText(this, pages[i].toString(), Toast.LENGTH_SHORT).show();
-                //TODO*/
-                break;
+                            PAGE=pages[i];
+                            break;
         }
 
 
@@ -110,61 +108,68 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
     void retrofit(){
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ApiInterface myinterface=retrofit.create(ApiInterface.class);
-        String APIKEY=getResources().getString(R.string.apikey);
-
-        Call<MovieResults> call =myinterface.listOfMovies(CATEGORY,APIKEY,LANGUAGE,PAGE);
-
-        call.enqueue(new Callback<MovieResults>() {
-            @Override
-            public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
-                try {
-                    MovieResults results = response.body();
-                   // maxPage = results.getTotal_pages();
-                     listofMovies1 = results.getResults();
-                    // movieAdapter.notifyDataSetChanged();
-                    Log.e(TAG, "No of Item" + listofMovies1.size());
-                    Toast.makeText(MainActivity.this, "MOVIE" + listofMovies1.get(0).getTitle(), Toast.LENGTH_SHORT).show();
-                    movieAdapter=new MovieAdapter(MainActivity.this, listofMovies1, MainActivity.this::onListItemClick);
-                    recyclerView.setAdapter(movieAdapter);
+        if(NetworkCheck.connected(this)) {
 
 
-                }catch (Exception e){
-                    System.out.println(e.getMessage());
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            ApiInterface myinterface = retrofit.create(ApiInterface.class);
+            String APIKEY = getResources().getString(R.string.apikey);
+
+            Call<MovieResults> call = myinterface.listOfMovies(CATEGORY, APIKEY, LANGUAGE, PAGE);
+
+            call.enqueue(new Callback<MovieResults>() {
+                @Override
+                public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
+                    try {
+                        MovieResults results = response.body();
+                        maxPage = results.getTotal_pages();
+                        listofMovies1 = results.getResults();
+                        // movieAdapter.notifyDataSetChanged();
+                        Log.e(TAG, "No of Item" + listofMovies1.size());
+                        Toast.makeText(MainActivity.this, "MOVIE" + listofMovies1.get(0).getTitle(), Toast.LENGTH_SHORT).show();
+                        movieAdapter = new MovieAdapter(MainActivity.this, listofMovies1, MainActivity.this::onListItemClick);
+                        recyclerView.setAdapter(movieAdapter);
+                        pages= new Integer[maxPage];
+                        for(int i =1;i<=maxPage;i++){
+                            pages[i-1]=i;
+                            /*pg[i-1]=Integer.toString(i);*/
+                        }
+                        ArrayAdapter<Integer> a2=new ArrayAdapter<Integer>(MainActivity.this,android.R.layout.simple_spinner_item,pages);
+                        a2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        page.setAdapter(a2);
+
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<MovieResults> call, Throwable t) {
-                Log.e(TAG,t.getMessage());
+                @Override
+                public void onFailure(Call<MovieResults> call, Throwable t) {
+                    Log.e(TAG, t.getMessage());
 
-            }
-        });
-    }
-    void recyclerView(){
+                }
+            });
+        }else
+        {
+            Toast.makeText(this, "INTERNET NOT CONNECTED", Toast.LENGTH_SHORT).show();
 
-
-
-    }
-    void populateDropdown(){
-        pages= new Integer[20];
-        for(int i =1;i<=20;i++){
-            pages[i-1]=i;
-            /*pg[i-1]=Integer.toString(i);*/
         }
+    }
+
+    void populateDropdown(){
+
         categories.setOnItemSelectedListener(this);
         page.setOnItemSelectedListener(this);
         ArrayAdapter a1=new ArrayAdapter(this,android.R.layout.simple_spinner_item,category);
-        ArrayAdapter<Integer> a2=new ArrayAdapter<Integer>(this,android.R.layout.simple_spinner_item,pages);
-       /* ArrayAdapter a2=new ArrayAdapter(this,android.R.layout.simple_spinner_item,pg);*/
+
+
         a1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        a2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         categories.setAdapter(a1);
-        page.setAdapter(a2);
+
 
 
     }
@@ -172,6 +177,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onListItemClick(int clickedIndex) {
         Toast.makeText(this, "ITEM CLICKED"+clickedIndex, Toast.LENGTH_SHORT).show();
+        Intent intent=new Intent(MainActivity.this,DetailActivity.class);
+        intent.putExtra("DATA",listofMovies1.get(clickedIndex));
+        startActivity(intent);
 
     }
 }
