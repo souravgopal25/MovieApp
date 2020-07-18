@@ -58,7 +58,7 @@ public class MovieResults {
          * vote_count : 1850
          * video : false
          * poster_path : /s1cVTQEZYn4nSjZLnFbzLP0j8y2.jpg
-         * id : 8619
+         * id : i
          * adult : false
          * backdrop_path : /m11Mej9vbQqcXWgYrgPboCJ9NUh.jpg
          * original_language : en
