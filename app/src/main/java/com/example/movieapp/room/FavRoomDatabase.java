@@ -38,21 +38,7 @@ public abstract class FavRoomDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-/*
-            // If you want to keep data through app restarts,
-            // comment out the following block
-            databaseWriteExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    // Populate the database in the background.
-                    // If you want to start with more words, just add them.
-                    FavDAO dao = INSTANCE.favDAO();
 
-                    FavouriteModel object=new FavouriteModel("OSCAR");
-                    dao.insert(object);
-
-                }
-            });*/
         }
     };
 }

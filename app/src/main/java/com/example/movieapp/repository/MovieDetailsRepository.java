@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.movieapp.model.FavouriteModel;
-import com.example.movieapp.model.MovieResults;
 import com.example.movieapp.model.MovieReview;
 import com.example.movieapp.model.Trailer;
 import com.example.movieapp.networking.ApiInterface;
@@ -38,8 +37,7 @@ public class MovieDetailsRepository {
         favDAO = db.favDAO();
         mAllMovie = favDAO.getAlphabetizedWords();
     }
-/*    https://api.themoviedb.org/3/movie/8619/videos?api_key=c116a273a05858824b03df6c4cfcbf20&language=en-US
-    https://api.themoviedb.org/3/movie/8619/reviews?api_key=c116a273a05858824b03df6c4cfcbf20&language=en-US&page=1*/
+
     public LiveData<MovieReview> getMovieReview(Context context,int movieId,String apikey,String language,int page){
         final MutableLiveData<MovieReview> data =new MutableLiveData<>();
         if (NetworkCheck.connected(context)!=false){

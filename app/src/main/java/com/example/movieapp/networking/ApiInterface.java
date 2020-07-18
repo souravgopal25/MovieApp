@@ -18,9 +18,7 @@ public interface ApiInterface {
             @Query("language") String language,
             @Query("page") int page
     );
-   /* https://api.themoviedb.org/3/movie/popular?api_key=c116a273a05858824b03df6c4cfcbf20&language=en-US&page=1
-    https://api.themoviedb.org/3/movie/8619/videos?api_key=c116a273a05858824b03df6c4cfcbf20&language=en-US
-    https://api.themoviedb.org/3/movie/8619/reviews?api_key=c116a273a05858824b03df6c4cfcbf20&language=en-US&page=1*/
+
 
     @GET("/3/movie/{movieid}/videos")
     Call<Trailer> getTrailerCall(
