@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {FavouriteModel.class},version = 1,exportSchema = false)
+@Database(entities = {FavouriteModel.class},version = 2,exportSchema = false)
 public abstract class FavRoomDatabase extends RoomDatabase {
     public abstract FavDAO favDAO();
     private static volatile FavRoomDatabase INSTANCE;
@@ -28,6 +28,7 @@ public abstract class FavRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE= Room.databaseBuilder(context.getApplicationContext(),
                             FavRoomDatabase.class,"movie_database")
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

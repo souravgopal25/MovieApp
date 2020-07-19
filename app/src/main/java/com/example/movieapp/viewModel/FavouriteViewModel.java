@@ -22,7 +22,5 @@ public class FavouriteViewModel extends AndroidViewModel {
     public LiveData<List<FavouriteModel>> getAllMovies(){
         return mallMovies;
     }
-    public void insert(FavouriteModel favouriteModel){
-        favouriteRepository.insert(favouriteModel);
-    }
+
 }

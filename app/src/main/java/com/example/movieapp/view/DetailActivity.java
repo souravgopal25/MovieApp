@@ -3,13 +3,10 @@ package com.example.movieapp.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,19 +15,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.movieapp.R;
-import com.example.movieapp.adapter.MovieAdapter;
 import com.example.movieapp.adapter.ReviewAdapter;
 import com.example.movieapp.model.FavouriteModel;
 import com.example.movieapp.model.MovieResults;
 import com.example.movieapp.model.MovieReview;
 import com.example.movieapp.model.Trailer;
 import com.example.movieapp.viewModel.DetailActivityViewModel;
-import com.example.movieapp.viewModel.FavouriteViewModel;
-import com.example.movieapp.viewModel.MainActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +61,8 @@ public class DetailActivity extends AppCompatActivity implements ReviewAdapter.L
     DetailActivityViewModel detailActivityViewModel;
     private static String ytid;
     int size;
-    public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
+    String url;
+
 
 
     public static int getMovieID() {
@@ -85,7 +79,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewAdapter.L
         object = intent.getParcelableExtra("DATA");
         movieID=object.getId();
         Log.e(DetailActivity.class.getSimpleName(),"movie id: "+movieID);
-        Toast.makeText(this, "movie id: "+movieID, Toast.LENGTH_SHORT).show();
+
         initialization();
         getData();
         populate();
@@ -104,7 +98,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewAdapter.L
                     List<MovieReview.ResultsBean> listofreview1 = movieReview.getResults();
                     listofReview.addAll(listofreview1);
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(DetailActivity.this, "GOT Review Data", Toast.LENGTH_SHORT).show();
+
                 }
 
             }
@@ -144,7 +138,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewAdapter.L
     }
 
     public void populate(){
-        String url = "http://image.tmdb.org/t/p/w500/" + object.getPoster_path();
+        url = "http://image.tmdb.org/t/p/w500/" + object.getPoster_path();
         Glide.with(this).load(url).into(thumbnail);
         title.setText(object.getOriginal_title());
         description.setText(object.getOverview());
@@ -170,12 +164,18 @@ public class DetailActivity extends AppCompatActivity implements ReviewAdapter.L
 
 
     public void fav(View view) {
-        Intent replyIntent = new Intent();
 
-        String word = object.getTitle();
-        FavouriteModel obj1 =new FavouriteModel(word);
+
+
+        FavouriteModel obj1 =new FavouriteModel();
+        obj1.setMoviename(object.getTitle());
+        obj1.setDescription(object.getOverview());
+        obj1.setRating(object.getVote_average());
+        obj1.setrDate(object.getRelease_date());
+        obj1.setUrl(url);
+        obj1.setYtid(ytid);
         detailActivityViewModel.insert(obj1);
-        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Added To Favourite", Toast.LENGTH_SHORT).show();
 
 
 

@@ -44,6 +44,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mlist.size();
     }
 
+
+
     public interface ListItemClickListener {
         void onListItemClick(int clickedIndex);
     }

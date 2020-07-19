@@ -11,7 +11,6 @@ import com.example.movieapp.model.MovieResults;
 import com.example.movieapp.networking.ApiInterface;
 import com.example.movieapp.networking.RetrofitRequest;
 import com.example.movieapp.utils.NetworkCheck;
-import com.example.movieapp.view.MainActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +33,7 @@ public class MovieRepository {
                     @Override
                     public void onResponse(Call<MovieResults> call, Response<MovieResults> response) {
                         data.setValue(response.body());
-//                        Log.d(TAG,"TOTAL RESULTS "+response.body().getTotal_results());
+                       Log.d(TAG,"TOTAL RESULTS "+response.body().getTotal_results());
                     }
 
                     @Override
